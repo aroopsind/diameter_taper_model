@@ -1,0 +1,29 @@
+model {
+    
+    for (i in 1:Nobs) {
+    
+    diam[i] ~ dnorm(mu[i],tau)
+    mu[i] <- beta0[species[i]] * exp(-beta1[species[i]] * (POM[i] - 1.3))
+      
+    }
+      #species level random effects
+      for (j in 1:n.sp) {
+      beta0[j] ~ dnorm(mu.alpha, tau1)
+      beta1[j] ~ dnorm(mu.beta,tau2)
+      }
+      
+      #Priors for hyper-parameters    
+      mu.alpha ~ dnorm(0,0.0001)
+      mu.beta ~ dnorm(0,0.0001)
+      
+      sigma1 ~ dunif (0,100)
+      tau1 <- 1/(sigma1 * sigma1)
+    
+      sigma2 ~ dunif (0,100)
+      tau2 <- 1/(sigma2 * sigma2)
+
+      #residual variance
+      sigma ~ dunif (0,100)
+      tau <- 1/(sigma * sigma)
+      
+    }
